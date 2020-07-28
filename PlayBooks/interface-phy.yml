@@ -1,0 +1,38 @@
+[root@Ansible-01 interface]# cat interface-phy.yml 
+---
+- name: interface config 
+  hosts: cisco
+  connection: local
+ # vars: 
+ #    creds:
+ #         username: "{{ username }}"
+ #         password: "{{ password }}"
+  gather_facts: no
+
+  tasks:
+  - name: action interface G1-2 configure
+    ios_config:
+       lines:
+          - no shutdown
+          - switch mode trunk
+          - switch trunk allow vlan all
+          - do wr
+       parents: interface range gigabitEthernet 1/0/1 - 2
+
+  - name: action interface G3 configuration
+    ios_l2_interface:
+        name: GigabitEthernet1/0/3
+        mode: access
+        access_vlan: 100 
+
+  - name: action interface G3 configuration
+    ios_l2_interface: 
+        name: GigabitEthernet1/0/4
+        mode: trunk
+        native_vlan: 100
+        trunk_allowed_vlans: 10-255
+
+  - name: save configuration
+    ios_command:
+         commands:
+             -  wr

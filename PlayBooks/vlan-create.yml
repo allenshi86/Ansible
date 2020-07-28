@@ -1,0 +1,18 @@
+---
+- name: vlan create playbook
+  hosts: cisco
+  connection: local
+  vars:
+      creds:
+          username: "{{ username }}"
+          password: "{{ password }}"
+  gather_facts: no
+   
+  tasks:
+  - name: action add vlan
+    ios_config:
+         auth_pass: enablepass #提供enable密码
+         authorize: yes #进入特权模式，如果特权模式不需要密码，可以不设置
+         lines:
+          - vlan 100-130
+          - do wr
